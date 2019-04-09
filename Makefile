@@ -8,7 +8,7 @@
 PROJECT		?= ultrasonic
 
 # Objects to build
-OBJECTS		?= robotIo.o main.o 
+OBJECTS		?= robotIo.o ultrasonic.o main.o 
 
 # Microprocessor
 AVRMCU		?= atmega328p
