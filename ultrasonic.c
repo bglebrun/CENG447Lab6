@@ -6,6 +6,11 @@
  * Servo Motor: 3 (portd 3)
  */
 
+/*
+ * Sets the pins for ultrasonic sensor, 
+ * then will setup the necessary timer 1
+ * to properly time the sensor 
+ */ 
 void initUltrasonic()
 {
     // Trig on A5
@@ -40,6 +45,7 @@ void initUltrasonic()
     TCCR1B |= 0x05;
 }
 
+// Triggers ultrasonic sensor, then waits 60 ms
 void triggerUltrasonic() {
     Overflow = 0;
     setBit(PORTC, US_TRIG);
@@ -51,18 +57,29 @@ void triggerUltrasonic() {
     _delay_ms(60);
 }
 
+// Getter for overflow status
+unsigned int getOverflowStatus() {
+    return Overflow;
+}
+
+// Overflow vector
 ISR(TIMER1_OVF_vect)
 {
     // Timer 1 overflow
     Overflow = 1;
 }
 
+/*
+ * Gets the current status of timer 1, then
+ * converts it into clock/cm
+ */ 
 unsigned int recieveUltrasonic() {
     unsigned int i = TCNT1;
     // 64 us per count in i
     return ((58*64)/i);
 }
 
+// Reads from timer 1 counter
 unsigned int TIM16_ReadTCNT1()
 {
     unsigned char sreg;
@@ -78,6 +95,7 @@ unsigned int TIM16_ReadTCNT1()
     return i;
 }
 
+// Sets timer 1 counter
 void TIM16_WriteTCNT1(unsigned int i)
 {
     unsigned char sreg;
