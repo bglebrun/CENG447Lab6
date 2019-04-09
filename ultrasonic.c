@@ -59,7 +59,7 @@ void turnonTimer1()
 // Triggers ultrasonic sensor, then waits 60 ms
 void triggerUltrasonic()
 {
-    Overflow = false;
+    TimerOverflow = false;
     setBit(PORTC, US_TRIG);
     _delay_ms(10);
     clearBit(PORTC, US_TRIG);
@@ -70,13 +70,13 @@ void triggerUltrasonic()
 }
 
 // Getter for overflow status
-unsigned int getOverflowStatus() { return Overflow; }
+unsigned int getOverflowStatus() { return TimerOverflow; }
 
 // Overflow vector
 ISR(TIMER1_OVF_vect)
 {
     // Timer 1 overflow
-    Overflow = true;
+    TimerOverflow = true;
 }
 
 /*

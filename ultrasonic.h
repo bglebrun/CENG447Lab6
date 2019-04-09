@@ -12,7 +12,7 @@
  * false = no overflow
  * true = overflow happened in test
  */
-volatile bool Overflow = false;
+volatile bool TimerOverflow = false;
 
 unsigned int getOverflowStatus();
 void initUltrasonic();
