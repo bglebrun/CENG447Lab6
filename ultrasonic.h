@@ -14,7 +14,7 @@
  */
 volatile bool TimerOverflow = false;
 
-unsigned int getOverflowStatus();
+bool getOverflowStatus();
 void initUltrasonic();
 void triggerUltrasonic();
 void turnoffTimer1();

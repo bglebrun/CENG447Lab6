@@ -70,7 +70,7 @@ void triggerUltrasonic()
 }
 
 // Getter for overflow status
-unsigned int getOverflowStatus() { return TimerOverflow; }
+bool getOverflowStatus() { return TimerOverflow; }
 
 // Overflow vector
 ISR(TIMER1_OVF_vect)
