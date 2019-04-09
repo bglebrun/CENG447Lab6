@@ -1,6 +1,9 @@
 #ifndef _PCINT_H_
 #define _PCINT_H_
 #include "avr/io.h"
+#include "ultrasonic.h"
+#include <avr/interrupt.h>
+#include <stdbool.h>
 
 #define PCMSK1_CONFIG                                                          \
     (0 << PCINT14) | (1 << PCINT13) | (0 << PCINT12) | (0 << PCINT11) |        \

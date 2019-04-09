@@ -10,7 +10,7 @@ void initPCINT()
 // written with a general switch design to
 // handle cases where we are listening to more
 // than one pin
-ISR(PCINT13_vect)
+ISR(PCINT1_vect)
 {
     // last state the pins were in
     static unsigned char lastState = 0x00;
@@ -44,7 +44,7 @@ ISR(PCINT13_vect)
             turnonTimer1();
         }
 
-        highEdge13 != highEdge13;
+        highEdge13 = !highEdge13;
         break;
     default:
         // a case we weren't expecting occurred, do nothing

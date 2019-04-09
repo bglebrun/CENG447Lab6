@@ -2,14 +2,17 @@
 #define _ULTRASONIC_H_
 #include "bit_macros.h"
 #include "pin_map.h"
+#include <avr/interrupt.h>
 #include <avr/io.h>
+#include <stdbool.h>
+#include <util/delay.h>
 
 /*
  * Flag for overflow
- * 0 = no overflow
- * 1 = overflow happened in test
+ * false = no overflow
+ * true = overflow happened in test
  */
-volatile unsigned int Overflow = 0;
+volatile bool Overflow = false;
 
 unsigned int getOverflowStatus();
 void initUltrasonic();

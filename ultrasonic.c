@@ -1,5 +1,7 @@
 #include "ultrasonic.h"
 
+extern volatile bool Overflow;
+
 /*
  *
  * Ultrasonic sensor: A4 A5 (portc 4 5)
@@ -98,7 +100,7 @@ unsigned int TIM16_ReadTCNT1()
     // Save global interrupt flag
     sreg = SREG;
     // Disable interrupts
-    _CLI();
+    cli();
     // Read TCNT1 into i
     i = TCNT1;
     // Restore global interrupt flag
@@ -113,7 +115,7 @@ void TIM16_WriteTCNT1(unsigned int i)
     // Save global interrupt flag
     sreg = SREG;
     // Disable interrupts
-    _CLI();
+    cli();
     // Set TCNT1  to i
     TCNT1 = i;
     // Restore global interrupt flag
