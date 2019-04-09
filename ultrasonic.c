@@ -27,6 +27,17 @@ void initUltrasonic()
     TCNT1 = 0x00;
     // Normal mode
     TCCR1A = 0x00;
+
+    // ensure we start with the timer off
+    turnoffTimer1();
+}
+
+// convenience function to turn the timer off
+void turnoffTimer1() { TCCR1B &= 0x00; }
+
+// convenience function to turn the timer back on with a default prescaler
+void turnonTimer1()
+{
     /*
      * Prescaler value goes here
      * 1 - no prescaling
@@ -40,7 +51,8 @@ void initUltrasonic()
     TCCR1B |= 0x05;
 }
 
-void triggerUltrasonic() {
+void triggerUltrasonic()
+{
     Overflow = 0;
     setBit(PORTC, US_TRIG);
     _delay_ms(10);
@@ -80,11 +92,10 @@ unsigned int TIM16_ReadTCNT1()
 void TIM16_WriteTCNT1(unsigned int i)
 {
     unsigned char sreg;
-    unsigned int i;
     // Save global interrupt flag
     sreg = SREG;
     // Disable interrupts
-    __disable_interrupt();
+    _CLI();
     // Set TCNT1  to i
     TCNT1 = i;
     // Restore global interrupt flag
