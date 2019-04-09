@@ -51,15 +51,16 @@ void triggerUltrasonic() {
     _delay_ms(60);
 }
 
-ISR(TIMER1_CAPT_vect)
-{
-    // Timer 1 capture
-}
-
 ISR(TIMER1_OVF_vect)
 {
     // Timer 1 overflow
     Overflow = 1;
+}
+
+unsigned int recieveUltrasonic() {
+    unsigned int i = TCNT1;
+    // 64 us per count in i
+    return ((58*64)/i);
 }
 
 unsigned int TIM16_ReadTCNT1()
