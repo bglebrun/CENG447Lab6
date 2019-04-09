@@ -12,6 +12,7 @@
 #define PCICR_CONFIG (0 << PCIE2) | (1 << PCIE1) | (0 << PCIE0)
 
 volatile unsigned int timeResponse;
+volatile bool responseAvailable;
 
 void initPCINT();
 

@@ -1,7 +1,5 @@
 #include "ultrasonic.h"
 
-extern volatile bool Overflow;
-
 /*
  *
  * Ultrasonic sensor: A4 A5 (portc 4 5)
@@ -61,7 +59,7 @@ void turnonTimer1()
 // Triggers ultrasonic sensor, then waits 60 ms
 void triggerUltrasonic()
 {
-    Overflow = 0;
+    Overflow = false;
     setBit(PORTC, US_TRIG);
     _delay_ms(10);
     clearBit(PORTC, US_TRIG);
@@ -78,7 +76,7 @@ unsigned int getOverflowStatus() { return Overflow; }
 ISR(TIMER1_OVF_vect)
 {
     // Timer 1 overflow
-    Overflow = 1;
+    Overflow = true;
 }
 
 /*
@@ -87,7 +85,7 @@ ISR(TIMER1_OVF_vect)
  */
 unsigned int receiveUltrasonic()
 {
-    unsigned int i = TCNT1;
+    unsigned int i = TIM16_ReadTCNT1();
     // 64 us per count in i
     return ((58 * 64) / i);
 }

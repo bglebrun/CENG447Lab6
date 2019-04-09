@@ -36,12 +36,14 @@ ISR(PCINT1_vect)
         if (highEdge13)
         {
             turnoffTimer1();
-            timeResponse = TIM16_ReadTCNT1();
+            timeResponse = receiveUltrasonic();
+            responseAvailable = true;
         }
         else
         {
             TIM16_WriteTCNT1(0);
             turnonTimer1();
+            responseAvailable = false;
         }
 
         highEdge13 = !highEdge13;
