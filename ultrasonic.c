@@ -37,7 +37,18 @@ void initUltrasonic()
      * source -
      * https://sites.google.com/site/qeewiki/books/avr-guide/timers-on-the-atmega328
      */
-    TCCR1B = 0x05;
+    TCCR1B |= 0x05;
+}
+
+void triggerUltrasonic() {
+    Overflow = 0;
+    setBit(PORTC, US_TRIG);
+    _delay_ms(10);
+    clearBit(PORTC, US_TRIG);
+    // reset counter 1
+    TIM16_WriteTCNT1(0);
+    // Delay while pulse is sent
+    _delay_ms(60);
 }
 
 ISR(TIMER1_CAPT_vect)
@@ -48,21 +59,7 @@ ISR(TIMER1_CAPT_vect)
 ISR(TIMER1_OVF_vect)
 {
     // Timer 1 overflow
-}
-
-unsigned int TIM16_ReadTCNT0()
-{
-    unsigned char sreg;
-    unsigned int i;
-    // Save global interrupt flag
-    sreg = SREG;
-    // Disable interrupts
-    _CLI();
-    // Read TCNT1 into i
-    i = TCNT0;
-    // Restore global interrupt flag
-    SREG = sreg;
-    return i;
+    Overflow = 1;
 }
 
 unsigned int TIM16_ReadTCNT1()
@@ -78,20 +75,6 @@ unsigned int TIM16_ReadTCNT1()
     // Restore global interrupt flag
     SREG = sreg;
     return i;
-}
-
-void TIM16_WriteTCNT0(unsigned int i)
-{
-    unsigned char sreg;
-    unsigned int i;
-    // Save global interrupt flag
-    sreg = SREG;
-    // Disable interrupts
-    __disable_interrupt();
-    // Set TCNT0  to i
-    TCNT0 = i;
-    // Restore global interrupt flag
-    SREG = sreg;
 }
 
 void TIM16_WriteTCNT1(unsigned int i)
