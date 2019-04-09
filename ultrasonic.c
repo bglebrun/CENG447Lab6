@@ -13,6 +13,8 @@ initUltrasonic() {
     // Echo on A4
     clearBit(DDRC, US_RECV);
 
+    PORTC = 0x00;
+
     /*
      * Timer 1
      * Pins 7:4 zeroes
