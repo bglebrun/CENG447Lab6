@@ -29,10 +29,11 @@ initUltrasonic() {
      * 1 - no prescaling
      * 2 - clock /8
      * 3 - clock /64
-     * 4 - clock /256
+     * 4 - clock /256 - 16us
+     * 5 - clock /1024 - 64us
      * source - https://sites.google.com/site/qeewiki/books/avr-guide/timers-on-the-atmega328
      */
-    TCCR1B = 0x04;
+    TCCR1B = 0x05;
 }
 
 ISR(TIMER1_CAPT_vect) {
