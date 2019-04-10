@@ -7,20 +7,13 @@
 #include <stdbool.h>
 #include <util/delay.h>
 
-/*
- * Flag for overflow
- * false = no overflow
- * true = overflow happened in test
- */
-volatile bool TimerOverflow = false;
-
 bool getOverflowStatus();
 void initUltrasonic();
 void triggerUltrasonic();
 void turnoffTimer1();
 void turnonTimer1();
-unsigned int TIM16_ReadTCNT1();
 void TIM16_WriteTCNT1(unsigned int i);
+unsigned int TIM16_ReadTCNT1();
 unsigned int receiveUltrasonic();
 
 #endif

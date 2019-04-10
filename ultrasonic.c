@@ -1,6 +1,13 @@
 #include "ultrasonic.h"
 
 /*
+ * Flag for overflow:
+ * false = no overflow.
+ * true = overflow happened in test
+ */
+volatile bool TimerOverflow = false;
+
+/*
  *
  * Ultrasonic sensor: A4 A5 (portc 4 5)
  * Servo Motor: 3 (portd 3)
@@ -64,7 +71,7 @@ void triggerUltrasonic()
     _delay_ms(10);
     clearBit(PORTC, US_TRIG);
     // reset counter 1
-    TIM16_WriteTCNT1(0);
+    // TIM16_WriteTCNT1(0);
     // Delay while pulse is sent
     _delay_ms(60);
 }
