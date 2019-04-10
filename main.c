@@ -30,17 +30,18 @@ int main()
     fprintf(&mystdout, "initializing\n");
     Init();
     fprintf(&mystdout, "done initializing\n");
+    fprintf(&mystdout, "triggering ultrasonic\n");
+    triggerUltrasonic();
+    fprintf(&mystdout, "done triggering ultrasonic, waiting for "
+                       "response\n");
     // int i = 0;
     while (1)
     {
-        fprintf(&mystdout, "triggering ultrasonic\n");
-        triggerUltrasonic();
-        fprintf(&mystdout, "done triggering ultrasonic, waiting for "
-                           "response\n");
         while (!responseAvailable)
         {
         }
         fprintf(&mystdout, "distance: %d cm\n", receiveUltrasonic());
+        responseAvailable = false;
     }
     return 1;
 }

@@ -23,9 +23,11 @@ void initUltrasonic()
     // Trig on A5
     setBit(DDRC, US_TRIG);
     // Echo on A4
-    clearBit(DDRC, US_RECV);
+    clearBit(DDRC, US_ECHO);
 
     PORTC = 0x00;
+
+    // setBit(PORTC, US_ECHO); // pull-up for echo
 
     /*
      * Timer 1
@@ -68,12 +70,12 @@ void triggerUltrasonic()
 {
     TimerOverflow = false;
     setBit(PORTC, US_TRIG);
-    _delay_ms(10);
+    _delay_us(9);
     clearBit(PORTC, US_TRIG);
     // reset counter 1
     // TIM16_WriteTCNT1(0);
     // Delay while pulse is sent
-    _delay_ms(60);
+    _delay_us(60);
 }
 
 // Getter for overflow status
