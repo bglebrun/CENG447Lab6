@@ -62,7 +62,7 @@ unsigned int readUltrasonic()
     // Trigger the sensor
     triggerUltrasonic();
     // Spin while we either timeout or wait
-    while(!TimerOverflow || !responseAvailable);
+    while(!TimerOverflow && !responseAvailable);
     return timeResponse;
 }
 
