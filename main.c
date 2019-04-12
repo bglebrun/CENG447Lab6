@@ -38,6 +38,8 @@ int main()
         {
         }
         fprintf(&mystdout, "distance: %d cm\n", receiveUltrasonic());
+        fprintf(&mystdout, "overflow: %s\n",
+                getOverflowStatus() ? "YES" : "NO");
         responseAvailable = false;
         _delay_ms(500);
     }

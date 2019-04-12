@@ -96,7 +96,8 @@ unsigned int receiveUltrasonic()
 {
     unsigned int i = TIM16_ReadTCNT1();
     // 64 us per count in i
-    return ((58 * 64) / i);
+    // return ((58 * 64) / i);
+    return (i * 64) / 58;
 }
 
 // Reads from timer 1 counter
