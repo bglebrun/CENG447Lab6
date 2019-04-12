@@ -29,22 +29,23 @@ void Init()
     sei();
 }
 
+unsigned char motorSpeedMap(unsigned int USDistance) {
+    unsigned int ans = ((USDistance - 3) * 255 / 27);
+    return (ans > 255? 255 : ans);
+}
+
 int main()
 {
-    fprintf(&mystdout, "initializing\n");
     Init();
-    fprintf(&mystdout, "done initializing\n");
     while (1)
     {
-        fprintf(&mystdout, "triggering ultrasonic\n");
         triggerUltrasonic();
         while (!responseAvailable)
         {
         }
-        fprintf(&mystdout, "distance: %d cm\n", receiveUltrasonic());
-        fprintf(&mystdout, "overflow: %s\n",
-                getOverflowStatus() ? "YES" : "NO");
-        responseAvailable = false;
+        unsigned int dist = receiveUltrasonic();
+        fprintf(&mystdout, "Sensor reading: %dcm , mapped value: %d\n",
+            dist, motorSpeedMap(dist));
         _delay_ms(500);
     }
     return 1;
