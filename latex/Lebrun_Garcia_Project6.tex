@@ -99,7 +99,7 @@ In addition to the new code, the motor control code from the last lab assignment
 \subsection*{initPCINT}
 Initialization logic for the pin-change interrupts. Sets the pin change interrupt control registers \textit{PCMSK1} and \textit{PCICR} using the defined bit strings \textit{PCMSK1\_CONFIG} and \textit{PCICR\_CONFIG} provided in the file 'pcint.h'.
 
-\subsection*{ISR(PCINT1_vect) (interrupt)}
+\subsection*{ISR(PCINT1\_vect) (interrupt)}
 Interrupt handler for the second pin change interrupt vector on the board. This assignment only required the use of PCINT12 (PORTC4, pin labeled on the board as A4), which allowed the interrupt to be simplified from the more general approach of capturing the current pin state and comparing with the previous state. This also made the interrupt take less time, and therefore provide a more accurate reading for the distance.
 
 \subsection*{initUltrasonic}
@@ -113,7 +113,6 @@ Helper function to provide a more readable mnemonic for enabling TC1. Works by a
 
 \subsection*{triggerUltrasonic}
 Sends a $10\mu{s}$ pulse to the ultrasonic sensor to trigger a 'ping'. Waits $60ms$ after the ping is triggered as suggested in the device's documentation.
-%TODO correct this to match code if necessary
 
 \subsection*{getOverflowStatus}
 'Getter' function to provide access to the TimerOverflow variable. This can be used to provide specialized behaviors in the event that TC1 overflows while measuring a distance.
@@ -179,14 +178,16 @@ After a call to getNumInterruptsForDuration, targetCount will be set and delayUn
 Macro function to simplify the computation for getNumInterruptsForDuration. Divides the requested speed by the PWM (interrupt) period and adds 1 if the period does not evenly divide the delay.
 
 \section*{Discussion}
-%TODO
+The biggest challenge we faced with our approach to this lab was determining what was wrong with our pin change interrupts when they failed to get responses. We found after several experiments and some online research that overly long interrupt handling logic could cause us to miss the rising/falling edges of our sensor. We had written the handler in a general style so it could track the last state and handle changes to multiple pins, but this backfired by taking too much time. The second, and current, version assumed that only one pin would change, allowing us to simplify the logic significantly.\\
+
+This lab provided a useful introduction to using timers and interrupts to provide semi-asynchronous sensor reading and control, which is useful for allowing the robot to move while it is reading in data. Otherwise, we would be required to have the robot stop, take measurements, and then move again.
 
 
 \section*{Responses}
-\begin{enumerate}
+%\begin{enumerate}
 %TODO
 
-\end{enumerate} 
+%\end{enumerate} 
 
 \newpage
 \section*{Appendices}
