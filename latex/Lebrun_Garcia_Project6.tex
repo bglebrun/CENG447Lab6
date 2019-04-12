@@ -81,15 +81,13 @@ The ultrasonic sensor, battery pack, and H bridge were connected to the marked l
 
 While the motors require more power than the micro-controller can provide to operate, the ultrasonic sensor is capable of running off of the micro-controller's power. Both components are capable of running off of the kit-provided battery pack when it is switched on.
 
-%TODO add image of configuration
-
-%\begin{figure}[!ht]
-%\begin{center}
-%\includegraphics[width=\linewidth]{spare_me.jpg}
-%\end{center}
-%\caption{Fully assembled Elegoo robot car kit V3.0.}
-%\label{fig:f4}
-%\end{figure}
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[width=\linewidth]{robot.jpg}
+\end{center}
+\caption{Robot configuration with ultrasonic sensor.}
+\label{fig:f4}
+\end{figure}
 
 \section*{Implementation}
 For this assignment, we implemented some basic timer control and interfacing logic for the ultrasonic sensor. Additionally, we created the beginning of a pin-change interrupt library to help with controlling the robot later on as the complexity of the assignments increases.\\
