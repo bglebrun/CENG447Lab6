@@ -182,22 +182,106 @@ This lab provided a useful introduction to using timers and interrupts to provid
 
 
 \section*{Responses}
-%\begin{enumerate}
-%TODO
+\begin{enumerate}
+\item In this lab we are using timer/counter 1 to generate a dedicated ”clock” for pulse measuring.
+The Wiring library provided with the Arduino IDE provides a function pulseIn() which
+uses a different timing method. Explain how this pulseIn() function works.
 
-%\end{enumerate} 
+In the native arduino \verb+PulseIn()+ the library is counting the pulse by having calculated the number of clock 
+cycles in one spin of a while loop. This property is used to count the status between when the pin changed outputs. 
+This of course depends on the number of clock cycles to remain the same in the processor's main frequency, 
+and with some software engineering, can be adapted depending on which hardware the compiler is configured for. 
+This is in contrast to our method of relying on the Atmega328p's internal timer 1 to count the clock cycles between 
+high and low ends of the timer.
+
+\item  Timer/counter 1 is 16 bits, meaning TCNT1 is two bytes wide. With the ATMega328P’s 8-bit
+data bus two separate reads must be completed to read TCNT1. In the space of these two
+reads, it is possible that TCNT1 changes state. How does the ATMega328P work around this
+potential data-integrity hazard?
+
+In the space between these reads the microprocessor has an 8 bit temporary register that handles the 
+storage of the high byte while the low byte is being read. The assignment of the high byte then 
+happens in the same clock cycle that the data is being written to the temp space.
+n the high byte read the arduinio will send the temp register directly to the register to be assigned. This is 
+why it is advised to read from the lower register before the higher register when reading two from 16 bit registers.
+
+
+\end{enumerate} 
 
 \newpage
 \section*{Appendices}
 Table of contents:
 \begin{itemize}
-    \item main.c - %TODO
+    \item main.c - Handles reading from Ultrasonic sensor and motor control
+    \item motor_driver.h - Motor driver header from lab 5
+    \item motor_driver.c - Motor driver code from lab 5
+    \item pcint.h - Pin change interrupt header for ultrasonic sensor
+    \item pcint.c - Pin change interrupt code for ultrasonic sensor
+    \item pin_map.h - Pin map header for device
+    \item robotio.h - UART control header
+    \item robotio.c - UART control code
+    \item ultrasonic.h - Ultrasonic header file
+    \item ultrasonic.c - Ultrasonic code file
 \end{itemize}
 \newpage
 
 \section*{Appendix A: main.c}
 \begin{tiny}
 \lstinputlisting{../main.c}
+\end{tiny}
+\newpage
+
+\section*{Appendix B: motor_driver.h}
+\begin{tiny}
+\lstinputlisting{../motor_driver.h}
+\end{tiny}
+\newpage
+
+\section*{Appendix C: motor_driver.c}
+\begin{tiny}
+\lstinputlisting{../motor_driver.c}
+\end{tiny}
+\newpage
+
+\section*{Appendix D: pcint.h}
+\begin{tiny}
+\lstinputlisting{../pcint.h
+\end{tiny}
+\newpage
+
+\section*{Appendix E: pcint.c}
+\begin{tiny}
+\lstinputlisting{../pcint.c}
+\end{tiny}
+\newpage
+
+\section*{Appendix F: pin_map.h}
+\begin{tiny}
+\lstinputlisting{../pin_map.h}
+\end{tiny}
+\newpage
+
+\section*{Appendix G: robotio.h}
+\begin{tiny}
+\lstinputlisting{../robotio.h}
+\end{tiny}
+\newpage
+
+\section*{Appendix H: robotio.c}
+\begin{tiny}
+\lstinputlisting{../robotio.c}
+\end{tiny}
+\newpage
+
+\section*{Appendix I: ultasonic.h}
+\begin{tiny}
+\lstinputlisting{../ultasonic.h}
+\end{tiny}
+\newpage
+
+\section*{Appendix J: ultasonic.c}
+\begin{tiny}
+\lstinputlisting{../ultrasonic.c}
 \end{tiny}
 \newpage
 
