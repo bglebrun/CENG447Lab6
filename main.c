@@ -44,9 +44,10 @@ int main()
         {
         }
         unsigned int dist = receiveUltrasonic();
+        unsigned char motorSpeed = motorSpeedMap(dist);
         fprintf(&mystdout, "Sensor reading: %dcm , mapped value: %d\n",
-            dist, motorSpeedMap(dist));
-        _delay_ms(500);
+            dist, motorSpeed);
+        driveForward(motorSpeed);
     }
     return 1;
 }

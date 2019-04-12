@@ -11,8 +11,8 @@
 #define DELAY_COUNT(time, rate) time / rate + (time % rate == 0 ? 0 : 1)
 
 // interrupt counter for motor A
-volatile extern unsigned long MAIC;
-extern unsigned long targetCount;
+volatile unsigned long MAIC;
+unsigned long targetCount;
 
 void setA(unsigned char speed, wheelDirection direction)
 {
@@ -73,7 +73,7 @@ void initMotor()
     TIMSK0 = 0x02;
 }
 
-void turnLeft(unsigned char speed, int time_ms)
+void turnLeftTimed(unsigned char speed, int time_ms)
 {
     getNumInterruptsForDuration(time_ms);
     setB(speed, FORWARD);
@@ -81,7 +81,7 @@ void turnLeft(unsigned char speed, int time_ms)
     delayUntilTargetCount();
 }
 
-void turnRight(unsigned char speed, int time_ms)
+void turnRightTimed(unsigned char speed, int time_ms)
 {
     getNumInterruptsForDuration(time_ms);
     setB(speed, BACK);
@@ -89,7 +89,7 @@ void turnRight(unsigned char speed, int time_ms)
     delayUntilTargetCount();
 }
 
-void driveForward(unsigned char speed, int time_ms)
+void driveForwardTimed(unsigned char speed, int time_ms)
 {
     getNumInterruptsForDuration(time_ms);
     setA(speed, FORWARD);
@@ -97,7 +97,19 @@ void driveForward(unsigned char speed, int time_ms)
     delayUntilTargetCount();
 }
 
-void driveBackward(unsigned char speed, int time_ms)
+void driveForward(unsigned char speed) 
+{
+    setA(speed, FORWARD);
+    setB(speed, FORWARD);
+}
+
+void driveBackward(unsigned char speed)
+{
+    setA(speed, BACK);
+    setB(speed, BACK);
+}
+
+void driveBackwardTimed(unsigned char speed, int time_ms)
 {
     getNumInterruptsForDuration(time_ms);
     setA(speed, BACK);

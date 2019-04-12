@@ -19,10 +19,12 @@ void initMotor();
 void setB(unsigned char speed, wheelDirection direction);
 void setA(unsigned char speed, wheelDirection direction);
 void stop();
-void turnLeft(unsigned char speed, int time_ms);
-void turnRight(unsigned char speed, int time_ms);
-void driveForward(unsigned char speed, int time_ms);
-void driveBackward(unsigned char speed, int time_ms);
+void turnLeftTimed(unsigned char speed, int time_ms);
+void turnRightTimed(unsigned char speed, int time_ms);
+void driveFoward(unsigned char speed);
+void driveBackward(unsigned char speed);
+void driveForwardTimed(unsigned char speed, int time_ms);
+void driveBackwardTimed(unsigned char speed, int time_ms);
 void delayUntilTargetCount();
 void getNumInterruptsForDuration(int duration_ms);
 
