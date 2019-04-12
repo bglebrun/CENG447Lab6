@@ -1,5 +1,6 @@
 #define F_CPU 16000000
 #include "bit_macros.h"
+#include "motor_driver.h"
 #include "pcint.h"
 #include "robotIo.h"
 #include "ultrasonic.h"
@@ -20,6 +21,9 @@ void Init()
 
     // configure ultrasonic range sensor
     initUltrasonic();
+
+    // configure motors
+    initMotor();
 
     // Enable global interrupts
     sei();

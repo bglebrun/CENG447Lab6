@@ -1,0 +1,206 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Memo
+% LaTeX Template
+% Version 1.0 (30/12/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Rob Oakes (http://www.oak-tree.us) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,11pt]{texMemo} % Set the paper size (letterpaper, a4paper, etc) and font size (10pt, 11pt or 12pt)
+
+\usepackage{parskip} % Adds spacing between paragraphs
+\usepackage[colorlinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{listings}
+\hypersetup{citecolor=DeepPink4}
+\hypersetup{linkcolor=red}
+\hypersetup{urlcolor=blue}
+\usepackage{cleveref}
+\setlength{\parindent}{15pt} % Indent paragraphs
+
+%----------------------------------------------------------------------------------------
+%	MEMO INFORMATION
+%----------------------------------------------------------------------------------------
+
+\memoto{Dr.Randy Hoover} % Recipient(s)
+
+\memofrom{Benjamin LeBrun, Benjamin Garcia} % Sender(s)
+
+\memosubject{Lab Assignment 6: TC1 and Ultrasonic Sensors} % Memo subject
+
+\memodate{\today} % Date, set to \today for automatically printing todays date
+
+% \logo{\includegraphics[width=0.1\textwidth]{logo.png}} % Institution logo at the top right of the memo, comment out this line for no logo
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the memo header information
+
+%----------------------------------------------------------------------------------------
+%	MEMO CONTENT
+%----------------------------------------------------------------------------------------
+
+\section*{Introduction}
+This lab tasked us with configuring the provided HC-SR04 ultrasonic range sensor using the ATMega328P's Timer/Counter1. We then had to provide a linear mapping from $[3cm,30cm]->[0,255]$ and control the robot's motor speed using this mapping. The sensor output and appropriate mapping was to then be displayed to the screen with every distance sample.
+
+\section*{Equipment}
+While the lab used the entire robot kit assembled together, the primary devices
+we used were:
+
+\begin{itemize}
+    \item Acrylic vehicle body with screws, assembled
+    \item Elegoo Uno (chip: Atmega328p)
+    \item 4 DC motors with wheels, screws 
+    \item L298 H bridge module dual channel
+    \item 2 ICR18650 batteries with battery box
+    \item Ribbon cables
+    \item Host laptop with AVR-gcc 8-bit toolchain
+    \item USB 2.0 A to B cable
+    \item HC-SR04 ultrasonic range sensor
+\end{itemize}
+
+\subsection*{Configuration}
+Our robot vehicle was assembled according to Elegoo's instructions which can be found
+on Elegoo's website at \url{https://www.elegoo.com/download/}. For this lab, we are
+using the V3.0 version of the robot kit.
+
+The ultrasonic sensor, battery pack, and H bridge were connected to the marked locations on the Elegoo shield included in the kit. The wheel motors were connected two to a side with the H bridge in the lower portion of the robot.
+
+While the motors require more power than the micro-controller can provide to operate, the ultrasonic sensor is capable of running off of the micro-controller's power. Both components are capable of running off of the kit-provided battery pack when it is switched on.
+
+%TODO add image of configuration
+
+%\begin{figure}[!ht]
+%\begin{center}
+%\includegraphics[width=\linewidth]{spare_me.jpg}
+%\end{center}
+%\caption{Fully assembled Elegoo robot car kit V3.0.}
+%\label{fig:f4}
+%\end{figure}
+
+\section*{Implementation}
+For this assignment, we implemented some basic timer control and interfacing logic for the ultrasonic sensor. Additionally, we created the beginning of a pin-change interrupt library to help with controlling the robot later on as the complexity of the assignments increases.\\
+
+In addition to the new code, the motor control code from the last lab assignment has been brought over to the current assignment, and implementation details are reproduced here from the prior assignment.
+
+\subsection*{initPCINT}
+Initialization logic for the pin-change interrupts. Sets the pin change interrupt control registers \textit{PCMSK1} and \textit{PCICR} using the defined bit strings \textit{PCMSK1\_CONFIG} and \textit{PCICR\_CONFIG} provided in the file 'pcint.h'.
+
+\subsection*{ISR(PCINT1_vect) (interrupt)}
+Interrupt handler for the second pin change interrupt vector on the board. This assignment only required the use of PCINT12 (PORTC4, pin labeled on the board as A4), which allowed the interrupt to be simplified from the more general approach of capturing the current pin state and comparing with the previous state. This also made the interrupt take less time, and therefore provide a more accurate reading for the distance.
+
+\subsection*{initUltrasonic}
+Initialization logic for the ultrasonic sensor and TC1. Configures TC1's overflow interrupt as well as disabling its output pins. starts the timer in the 'off' (disabled) state. TC1 is run in normal mode.
+
+\subsection*{turnoffTimer1}
+Helper function to provide a more readable mnemonic for disabling TC1. Works by assigning $0$ to \textit{TCCR1B}.
+
+\subsection*{turnonTimer1}
+Helper function to provide a more readable mnemonic for enabling TC1. Works by assigning $0x05$ to \textit{TCCR1B}.
+
+\subsection*{triggerUltrasonic}
+Sends a $10\mu{s}$ pulse to the ultrasonic sensor to trigger a 'ping'. Waits $60ms$ after the ping is triggered as suggested in the device's documentation.
+%TODO correct this to match code if necessary
+
+\subsection*{getOverflowStatus}
+'Getter' function to provide access to the TimerOverflow variable. This can be used to provide specialized behaviors in the event that TC1 overflows while measuring a distance.
+
+\subsection*{receiveUltrasonic}
+Reads from TC1 and returns the distance in centimeters corresponding to the time count in TC1. The equation used for this is $(i * 64) / 58$.
+
+\subsection*{TIM16\_ReadTCNT1}
+Function to read from TC1 as an atomic operation. Disables the global interrupt bit until the read is completed, stores the timer value into the 'i' local variable, re-enables interrupts, and finally returns 'i'.
+
+\subsection*{TIM16\_WriteTCNT1}
+Similar to the read operation, performs an atomic write by disabling the global interrupt bit. the unsigned integer parameter is written into the TCNT1 register, and then interrupts are re-enabled before leaving the function.
+
+\subsection*{initMotor}
+All of our motor initializations with timer preparation and 
+scaling, PWM modes and timer interrupt enable for turn functions.
+
+\subsection*{setB}
+Sets the OCR0B PWM pin and one side of our motor, specifically the 
+left side motors on our robot. Set speed and direction with included 
+enumeration inside of this motor driver file.
+
+\subsection*{setA}
+Sets the OCR0A PWM pin and one side of our motor, specifically the 
+right side motors on our robot. Set speed and direction with included 
+enumeration inside of this motor driver file.
+
+\subsection*{turnLeft}
+Simple abstraction function, activates the proper setB and setA functions 
+with speed and length of time to be inside the function then stops.
+
+\subsection*{turnRight}
+Simple abstraction function, activates the proper setB and setA functions 
+with speed and length of time to be inside the function then stops.
+
+\subsection*{driveForward}
+Simple abstraction function, drives the wheels forward for a set amount 
+of time, then stops.
+
+\subsection*{driveBackward}
+Simple abstraction function, drives the whels backwards for a set amount
+of time, then stops.
+
+\subsection*{enum WHEEL\_DIRECTION}
+Enumeration to allow ease of programming and simple calls for our motor driver
+functions. Values are: 
+
+\begin{itemize}
+    \item forward
+    \item back
+\end{itemize}
+
+\subsection*{ISR(TIMER0\_COMPA\_vect) (interrupt)}
+Increments the MAIC by one each time the interrupt is invoked. This allows a rough delay functionality with an accuracy based on the period of the interrupt. The program uses a 1024 prescaler, so the period of a single interrupt cycle is 16ms. We noticed possible errors with this timing method for the smallest prescaler values.
+
+\subsection*{getNumInterruptsForDuration}
+Computes the number of PWM periods that need to pass before the specified time has passed, to the next full period. The targetCount global is set to this value and the MAIC (Motor A Interrupt Counter) variable is compared against it to determine when the delay is finished. MAIC is set to 0 at the end of the function to prevent the delay from being incorrect.
+
+\subsection*{delayUntilTargetCount}
+After a call to getNumInterruptsForDuration, targetCount will be set and delayUntilTargetCount will spin wait until MAIC is greater than the targetCount. MAIC is incremented by the TIMER0\_COMPA\_vect interrupt so the loop will be escaped after the appropriate delay has gone by.
+
+\subsection*{DELAY\_COUNT}
+Macro function to simplify the computation for getNumInterruptsForDuration. Divides the requested speed by the PWM (interrupt) period and adds 1 if the period does not evenly divide the delay.
+
+\section*{Discussion}
+%TODO
+
+
+\section*{Responses}
+\begin{enumerate}
+%TODO
+
+\end{enumerate} 
+
+\newpage
+\section*{Appendices}
+Table of contents:
+\begin{itemize}
+    \item main.c - %TODO
+\end{itemize}
+\newpage
+
+\section*{Appendix A: main.c}
+\begin{tiny}
+\lstinputlisting{../main.c}
+\end{tiny}
+\newpage
+
+\end{document}
+\grid
