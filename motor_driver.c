@@ -97,7 +97,7 @@ void driveForwardTimed(unsigned char speed, int time_ms)
     delayUntilTargetCount();
 }
 
-void driveForward(unsigned char speed) 
+void driveForward(unsigned char speed)
 {
     setA(speed, FORWARD);
     setB(speed, FORWARD);
@@ -165,3 +165,5 @@ void getNumInterruptsForDuration(int duration_ms)
     // reset the counter variable
     MAIC = 0;
 }
+
+ISR(TIMER0_COMPA_vect) { MAIC++; }

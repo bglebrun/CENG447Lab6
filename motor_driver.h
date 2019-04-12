@@ -3,6 +3,7 @@
 #include "bit_macros.h"
 #include "pin_map.h"
 #include "util/delay.h"
+#include <avr/interrupt.h>
 #include <avr/io.h>
 
 #define TURN_DELAY_CIRCLE 250
