@@ -32,12 +32,7 @@ int main()
     fprintf(&mystdout, "done initializing\n");
     while (1)
     {
-        fprintf(&mystdout, "triggering ultrasonic\n");
-        triggerUltrasonic();
-        while (!responseAvailable)
-        {
-        }
-        fprintf(&mystdout, "distance: %d cm\n", receiveUltrasonic());
+        fprintf(&mystdout, "distance: %d cm\n", readUltrasonic());
         fprintf(&mystdout, "overflow: %s\n",
                 getOverflowStatus() ? "YES" : "NO");
         responseAvailable = false;
